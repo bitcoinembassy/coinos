@@ -34,23 +34,6 @@ $(->
     )
     $("#currency option[value='CAD']").attr('selected', 'selected')
 
-    $('#currency').change(->
-      $('#symbol option').remove()
-      symbol = $(this).val()
-      return unless symbol
-      symbols = Object.keys(data[symbol])
-      $.each(symbols, (i, v) ->
-        return if v == 'localbitcoins'
-        $('#symbol').append("<option value='#{v}'>#{v}</option>")
-      )
-
-      switch $(this).val()
-        when 'CAD'
-          $("#symbol option[value='quadrigacx']").attr('selected', 'selected')
-        when 'USD'
-          $("#symbol option[value='bitstamp']").attr('selected', 'selected')
-    )
-
     user = $('#username').val()
     $.getJSON("/#{user}.json", (data) ->
       $('#email').val(data.email)
@@ -58,7 +41,6 @@ $(->
       $('#logo').val(data.logo)
       $('#pubkey').val(data.pubkey)
       $('#address').val(data.address)
-      $("#symbol option[value='#{data.symbol}']").attr('selected', 'selected')
       $('#commission').val(data.commission)
       $('#unit').val(data.unit)
       $('#currency').change()

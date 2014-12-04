@@ -1,5 +1,5 @@
 (function() {
-  var RedisStore, app, authorize, bodyParser, cache, calculator, config, cookieParser, express, fetchRates, fs, passport, path, request, session, sessionStore, sessions, transactions, users;
+  var RedisStore, app, authorize, bodyParser, cache, calculator, config, cookieParser, express, fetchRates, fs, passport, path, port, request, session, sessionStore, sessions, transactions, users;
 
   request = require('request');
 
@@ -32,6 +32,8 @@
   sessionStore = new RedisStore(require('./redis').host, {
     ttl: 172800
   });
+
+  port = 3000;
 
   app = express();
 
@@ -89,7 +91,8 @@
   };
 
   (fetchRates = function() {
-    request("https://api.bitcoinaverage.com/exchanges/all", function(error, response, body) {
+    console.log('Refreshing rates.');
+    request("https://api.bitcoinaverage.com/ticker/global/CAD", function(error, response, body) {
       var file, stream;
       try {
         require('util').isDate(JSON.parse(body).timestamp);
@@ -156,6 +159,8 @@
     return res.end();
   });
 
-  app.listen(3000);
+  app.listen(port, function() {
+    return console.log('Server started -> listening on port ', port);
+  });
 
 }).call(this);

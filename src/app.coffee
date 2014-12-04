@@ -16,6 +16,8 @@ session = require('express-session')
 RedisStore = require('connect-redis')(session)
 sessionStore = new RedisStore(require('./redis').host, ttl: 172800)
 
+port = 3000
+
 app = express()
 app.enable('trust proxy')
 app.engine('html', require('hogan-express'))
@@ -51,7 +53,8 @@ cache = (req, res, next) ->
   next()
 
 do fetchRates = ->
-  request("https://api.bitcoinaverage.com/exchanges/all", (error, response, body) ->
+  console.log('Refreshing rates.')
+  request("https://api.bitcoinaverage.com/ticker/global/CAD", (error, response, body) ->
     try 
       require('util').isDate(JSON.parse(body).timestamp)
       file = 'public/js/rates.json'
@@ -98,4 +101,8 @@ app.use((err, req, res, next) ->
   res.end()
 )
 
-app.listen(3000)
+app.listen(port, ()->
+
+  console.log('Server started -> listening on port ', port)
+
+)
