@@ -16,6 +16,7 @@ session = require('express-session')
 RedisStore = require('connect-redis')(session)
 sessionStore = new RedisStore(require('./redis').host, ttl: 172800)
 
+# add to config file
 port = 3000
 
 app = express()
